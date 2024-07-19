@@ -172,7 +172,6 @@ const getMyJoinedCommunities = async (req, res) => {
                 }
             })
             .exec();
-console.log(memberships);
         const total = await Member.countDocuments({ user: userId });
 
         const response = {
