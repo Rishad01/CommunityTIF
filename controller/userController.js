@@ -6,6 +6,20 @@ import { Snowflake } from '@theinternetfolks/snowflake';
 const signup = async (req, res) => {
 
   const { name, email, password } = req.body;
+  const check= await User.findOne({email : email});
+  if(check)
+  {
+    res.json({
+      "status": false,
+      "errors": [
+        {
+          "param": "email",
+          "message": "User with this email address already exists.",
+          "code": "RESOURCE_EXISTS"
+        }
+      ]
+    });
+  }
   const snowflake = new Snowflake();
   try {
     //onsole.log(id);

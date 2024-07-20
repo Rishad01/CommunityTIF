@@ -15,7 +15,15 @@ export const verifyToken = (req, res, next) => {
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) {
-      return res.status(401).json({ message: 'Unauthorized' });
+      return res.status(401).json({
+        "status": false,
+        "errors": [
+          {
+            "message": "You need to sign in to proceed.",
+            "code": "NOT_SIGNEDIN"
+          }
+        ]
+      });
     }
     req.userId = decoded.id;
     next();

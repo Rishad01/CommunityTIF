@@ -15,12 +15,12 @@ const getAllMembers = async (req, res) => {
             .skip(skip)
             .limit(limit)
             .populate({
-                path: 'role', // Expand role details
-                select: 'id name' // Only select id and name fields
+                path: 'role', 
+                select: 'id name'
             })
             .populate({
-                path: 'user', // Expand user details
-                select: 'id name' // Only select id and name fields
+                path: 'user', 
+                select: 'id name'
             })
             .exec();
 
@@ -47,32 +47,32 @@ const addMember = async (req, res) => {
         const { community, user, role } = req.body;
         const currentUser = req.userId;
 
-        // Check if the user has the admin role
         const member = await Member.findOne({ user: currentUser, community });
         const memberRole= await Role.findOne({id: member.role});
         if (!member || memberRole.name !== 'Community Admin') {
             return res.status(403).json({ error: 'NOT_ALLOWED_ACCESS' });
         }
 
-        // Check if community exists
         const communityExists = await Community.findOne({id: community});
         if (!communityExists) {
             return res.status(404).json({ error: 'Community not found' });
         }
 
-        // Check if user exists
         const userExists = await User.findOne({id: user});
         if (!userExists) {
             return res.status(404).json({ error: 'User not found' });
         }
 
-        // Check if role exists
         const roleExists = await Role.findOne({id: role});
         if (!roleExists) {
             return res.status(404).json({ error: 'Role not found' });
         }
 
-        // Create new member
+        const existingMember = await Member.findOne({ community, user });
+        if (existingMember) {
+            return res.status(400).json({ error: 'Member already exists in the community' });
+        }
+
         const newMember = new Member({
             community,
             user,
