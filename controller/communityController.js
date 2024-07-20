@@ -21,6 +21,8 @@ const createCommunity = async (req, res) => {
     return res.status(400).json({ message: 'Owner ID is required' });
   }
 
+  const PORT = process.env.PORT || 3000;
+
   try {
     // Generate a slug and ensure it's unique
     let slug = slugify(name, { replacement: '-' });
@@ -40,7 +42,7 @@ const createCommunity = async (req, res) => {
     await newCommunity.save();
 
     // Call the role API to create the "Community Admin" role
-    const roleResponse = await axios.post('http://localhost:3000/v1/role', {
+    const roleResponse = await axios.post(`http://localhost:${PORT}/v1/role`, {
       name: 'Community Admin'
     });
 

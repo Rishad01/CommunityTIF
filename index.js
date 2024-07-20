@@ -26,6 +26,8 @@ app.use('/v1/role',roleRoutes);
 app.use('/v1/community',communityRoutes);
 app.use('/v1/member',memberRoutes);
 
-app.listen(3000,()=>{
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT,()=>{
     console.log('server started...')
 });
